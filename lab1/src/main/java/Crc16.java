@@ -52,6 +52,18 @@ public class Crc16 {
         return (short) crc;
     }
 
+    public static short calculateCrc(byte[] bytes, int offset, int length) {
+        int crc = 0x0000;
+        for (int i = offset; i<=length; i++) {
+            byte b = bytes[i];
+            crc = (crc >>> 8) ^ TABLE[(crc ^ b) & 0xff];
+        }
+
+        return (short) crc;
+    }
+
+
+
     public static void printCrc(String arg) {
         System.out.println(Integer.toHexString(calculateCrc(arg)));
     }

@@ -16,29 +16,26 @@ public class Encoder {
                     "AES"
             );
     static Cipher chipher;
+
     public static byte[] encode(Package pg) {
-        try
-        {
-            chipher = Cipher.getInstance("AES");
-        }catch (NoSuchAlgorithmException | NoSuchPaddingException e ){
-            System.out.println("Error in Cipher");
-        }
         try {
-        chipher.init(Cipher.ENCRYPT_MODE, key);
-        }catch (InvalidKeyException e){
-            System.out.println("Error in Cipher "+e.getMessage());
+            chipher = Cipher.getInstance("AES");
+            chipher.init(Cipher.ENCRYPT_MODE, key);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
+            System.out.println("Error in Cipher init " + e.getMessage());
         }
 
         byte[] encryptMessage = null;
         try {
-           encryptMessage = chipher.doFinal(pg.bMsg.message.getBytes());
-        }catch (BadPaddingException | IllegalBlockSizeException e){
-            System.out.println("Error in Cipher enciption: " + e.getMessage());
+            encryptMessage = chipher.doFinal(pg.bMsg.message.getBytes());
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
+            System.out.println("Error in Cipher encription: " + e.getMessage());
         }
-        byte bMagic = 0x13;
+
         int wLen = encryptMessage.length + 8;
-        ByteBuffer bb = ByteBuffer.allocate(16 + wLen+2);
-        bb.put(bMagic);
+        ByteBuffer bb = ByteBuffer.allocate(16 + wLen + 2);
+
+        bb.put((byte) 0x13);
         bb.put(pg.bSrc);
         bb.putLong(pg.bPktId);
         bb.putInt(wLen);

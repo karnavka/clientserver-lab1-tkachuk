@@ -1,11 +1,12 @@
 public class Package {
     byte bSrc;
     long bPktId;
-    Message  bMsg;
+    Message bMsg;
 
-    public Package(){
+    public Package() {
 
     }
+
     public Package(byte bSrc, long bPktId, Message bMsg) {
         this.bSrc = bSrc;
         this.bPktId = bPktId;

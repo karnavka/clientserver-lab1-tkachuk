@@ -11,7 +11,7 @@ public class EncoderTest {
     public void sameBehaviorOfEncoders() {
 Package pg = new Package((byte)0x33, 45, new Message(71, 51, "Secret")  );
      byte[]encoded = Encoder.encode(pg);
-     assertEquals("1333000000000000002d0000000e227b0000004700000033536563726574f599", Hex.encodeHexString(encoded));
+     assertEquals("1333000000000000002d00000018ecfa00000047000000332e569f8a86aa49b1e6d97f846940f0758b88", Hex.encodeHexString(encoded));
     }
 
     @Test

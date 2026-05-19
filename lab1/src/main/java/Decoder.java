@@ -11,7 +11,7 @@ public class Decoder {
         long bPktId = bb.getLong();
         int wLen = bb.getInt();
         short wCrc16 = bb.getShort();
-        short wCrc16ForChecking = Crc16.calculateCrc(bb.array(), 0, 13);
+        short wCrc16ForChecking = Crc16.calculateCrc(bb.array(), 0, 14);
         if (wCrc16ForChecking != wCrc16) throw new IllegalArgumentException("Crc header checking failed");
         int cType = bb.getInt();
         int bUseriID = bb.getInt();

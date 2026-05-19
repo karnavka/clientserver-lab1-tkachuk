@@ -54,7 +54,7 @@ public class Crc16 {
 
     public static short calculateCrc(byte[] bytes, int offset, int length) {
         int crc = 0x0000;
-        for (int i = offset; i<=length; i++) {
+        for (int i = offset; i<length+offset; i++) {
             byte b = bytes[i];
             crc = (crc >>> 8) ^ TABLE[(crc ^ b) & 0xff];
         }

@@ -15,17 +15,13 @@ public class Decoder {
                     "kittykittyxxxxxx".getBytes(StandardCharsets.UTF_8),
                     "AES"
             );
-    public static Package decode(byte[] array)  {
-        try
-        {
-            chipher = Cipher.getInstance("AES");
-        }catch (NoSuchAlgorithmException | NoSuchPaddingException e ){
-            System.out.println("Error in Cipher "+e.getMessage());
-        }
+
+    public static Package decode(byte[] array) {
         try {
+            chipher = Cipher.getInstance("AES");
             chipher.init(Cipher.DECRYPT_MODE, key);
-        }catch (InvalidKeyException e){
-            System.out.println("Error in Cipher "+e.getMessage());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException| InvalidKeyException e) {
+            System.out.println("Error in Cipher initialization: " + e.getMessage());
         }
 
         Package pg = new Package();
@@ -35,26 +31,27 @@ public class Decoder {
         byte bSrc = bb.get();
         long bPktId = bb.getLong();
         int wLen = bb.getInt();
+
         short wCrc16 = bb.getShort();
         short wCrc16ForChecking = Crc16.calculateCrc(bb.array(), 0, 14);
         if (wCrc16ForChecking != wCrc16) throw new IllegalArgumentException("Crc header checking failed");
+
         int cType = bb.getInt();
         int bUseriID = bb.getInt();
         byte[] messageBytes = new byte[wLen - 8];
         bb.get(messageBytes);
+      //  bb.position(24 + wLen - 8);
 
-        bb.position(24 + wLen - 8);
         short wCrc16M = bb.getShort();
         short wCrc16MForChecking = Crc16.calculateCrc(bb.array(), 16, wLen);
         if (wCrc16MForChecking != wCrc16M) throw new IllegalArgumentException("Crc checking failed");
 
         try {
             messageBytes = chipher.doFinal(messageBytes);
-        }catch(IllegalBlockSizeException| BadPaddingException e){
-            System.out.println("Error in Cipher "+e.getMessage());
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            System.out.println("Error in Cipher " + e.getMessage());
         }
         String message = new String(messageBytes);
-
 
         pg.setbSrc(bSrc);
         pg.setbPktId(bPktId);

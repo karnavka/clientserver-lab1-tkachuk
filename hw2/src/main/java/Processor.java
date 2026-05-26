@@ -48,6 +48,7 @@ public class Processor implements Runnable {
                 setPrice(msg, answer);
                 break;
         }
+        Queues.queueOfAnswers.put(new Package(answer));
     }
 
     private void setPrice(Message msg, Message answer) {
@@ -91,6 +92,7 @@ public class Processor implements Runnable {
 
     private void addGroup(Message msg, Message answer) {
         String fullMessage = msg.getMessage();
+        System.out.println(fullMessage);
         String groupName = fullMessage.split(": ")[1];
         if (DataBase.groups.containsKey(groupName)) {
             answer.setMessage("Group already exists");

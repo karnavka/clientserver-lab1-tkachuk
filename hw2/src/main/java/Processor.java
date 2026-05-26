@@ -20,7 +20,7 @@ public class Processor implements Runnable {
         }
     }
 
-    private void process() throws InterruptedException {
+    public void process() throws InterruptedException {
         Package pg = Queues.queueOfPackages.take();
         Message msg = pg.getbMsg();
         int cType = msg.getcType();
@@ -132,7 +132,7 @@ public class Processor implements Runnable {
                     if (newQuantity < 0) {
                         answer.setMessage("not enough product to write off: " + productName);
                     }
-                    if (newQuantity > 0) {
+                    else {
                         lock.setQuantity(newQuantity);
                         answer.setMessage("write off: " +amountToDelete+" "+ productName + "'s new quantity: " + lock.getQuantity());
                     }

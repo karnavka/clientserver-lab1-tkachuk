@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataBase {
-    public static List<Group> products = new ArrayList<>();
-
-    public DataBase() {
-        groups.put(Groups.NO_GROUP.name, new ConcurrentHashMap<>());
-    }
+    public static final ConcurrentHashMap<String,
+            ConcurrentHashMap<String, Product>> groups =
+            new ConcurrentHashMap<>();
 }

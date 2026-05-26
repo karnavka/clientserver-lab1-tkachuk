@@ -5,13 +5,13 @@ public class Runner {
     public static void main(String[] args) {
         int numberOfReceivers = 2;
         int numberOfDecryptors = 2;
-        int nubmerOfProcessors = 4;
+        int numberOfProcessors = 4;
         int numberOfEncryptors = 3;
         int numberOfSenders = 5;
 
         ExecutorService receivers = Executors.newFixedThreadPool(numberOfReceivers);
         ExecutorService decryptors = Executors.newFixedThreadPool(numberOfDecryptors);
-        ExecutorService processors = Executors.newFixedThreadPool(nubmerOfProcessors);
+        ExecutorService processors = Executors.newFixedThreadPool(numberOfProcessors);
         ExecutorService encryptors = Executors.newFixedThreadPool(numberOfEncryptors);
         ExecutorService senders = Executors.newFixedThreadPool(numberOfSenders);
 
@@ -23,7 +23,7 @@ public class Runner {
             decryptors.execute(new Decryptor());
         }
 
-        for (int i = 0; i < nubmerOfProcessors; i++) {
+        for (int i = 0; i < numberOfProcessors; i++) {
             processors.execute(new Processor());
         }
 

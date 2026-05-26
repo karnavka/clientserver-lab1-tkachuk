@@ -2,20 +2,22 @@ package packet;
 
 import enums.Commands;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Package {
-    private static long bPktId = 0;
+    private static final AtomicLong counter = new AtomicLong(0);
+    private long bPktId;
     private byte bSrc;
     private Message bMsg;
 
     public Package() {
-
     }
 
     public Package(byte bSrc, Message bMsg) {
         this.bSrc = bSrc;
         this.bMsg = bMsg;
 
-        bPktId++;
+        bPktId = counter.incrementAndGet();
     }
 
     public Package(Message bMsg) {

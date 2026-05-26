@@ -15,25 +15,21 @@ public class Runner {
         ExecutorService encryptors = Executors.newFixedThreadPool(numberOfEncryptors);
         ExecutorService senders = Executors.newFixedThreadPool(numberOfSenders);
 
-        for (int i = 0; i < numberOfReceivers; i++) {
+        for (int i = 0; i < numberOfReceivers; i++)
             receivers.execute(new FakeReceiver());
-        }
 
-        for (int i = 0; i < numberOfDecryptors; i++) {
+        for (int i = 0; i < numberOfDecryptors; i++)
             decryptors.execute(new Decryptor());
-        }
 
-        for (int i = 0; i < numberOfProcessors; i++) {
+        for (int i = 0; i < numberOfProcessors; i++)
             processors.execute(new Processor());
-        }
 
-        for (int i = 0; i < numberOfEncryptors; i++) {
+        for (int i = 0; i < numberOfEncryptors; i++)
             encryptors.execute(new Encryptor());
-        }
 
-        for (int i = 0; i < numberOfSenders; i++) {
+        for (int i = 0; i < numberOfSenders; i++)
             senders.execute(new Sender());
-        }
+
 
         receivers.shutdown();
         decryptors.shutdown();

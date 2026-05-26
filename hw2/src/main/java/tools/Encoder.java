@@ -1,3 +1,8 @@
+package tools;
+
+import packet.Crc16;
+import packet.Package;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -27,7 +32,7 @@ public class Encoder {
 
         byte[] encryptMessage = null;
         try {
-            encryptMessage = chipher.doFinal(pg.bMsg.message.getBytes());
+            encryptMessage = chipher.doFinal(pg.getbMsg().getMessage().getBytes());
         } catch (BadPaddingException | IllegalBlockSizeException e) {
             System.out.println("Error in Cipher encription: " + e.getMessage());
         }
@@ -36,13 +41,13 @@ public class Encoder {
         ByteBuffer bb = ByteBuffer.allocate(16 + wLen + 2);
 
         bb.put((byte) 0x13);
-        bb.put(pg.bSrc);
-        bb.putLong(pg.bPktId);
+        bb.put(pg.getbSrc());
+        bb.putLong(pg.getbPktId());
         bb.putInt(wLen);
         short wCrc16 = Crc16.calculateCrc(bb.array(), 0, 14);
         bb.putShort(wCrc16);
-        bb.putInt(pg.bMsg.cType);
-        bb.putInt(pg.bMsg.bUserId);
+        bb.putInt(pg.getbMsg().getcType());
+        bb.putInt(pg.getbMsg().getbUserId());
         bb.put(encryptMessage);
         short wCrc162 = Crc16.calculateCrc(bb.array(), 16, wLen);
         bb.putShort(wCrc162);

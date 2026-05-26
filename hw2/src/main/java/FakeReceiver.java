@@ -16,6 +16,7 @@ public class FakeReceiver implements Receiver, Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 receive();
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -53,12 +54,12 @@ public class FakeReceiver implements Receiver, Runnable {
                 bld.append("amount: ").append(random.nextInt(100));
                 break;
             case ADD_GROUP:
-                int randomGroup = random.nextInt(4);
+                int randomGroup = random.nextInt(3);
                 group = Groups.values()[randomGroup];
                 bld.append("group: ").append(group.name);
                 break;
             case ADD_PRODUCT_TO_GROUP:
-                group = Groups.values()[randomProduct % 3 + 1];
+                group = Groups.values()[randomProduct % 3];
                 bld.append("product: ").append(product.name).append("\n");
                 bld.append("group: ").append(group.name);
                 break;

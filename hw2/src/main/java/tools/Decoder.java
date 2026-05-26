@@ -1,3 +1,9 @@
+package tools;
+
+import packet.Crc16;
+import packet.Message;
+import packet.Package;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -18,7 +24,7 @@ public class Decoder {
                     "AES"
             );
 
-    public static Package decode(byte[] array) {
+    public static packet.Package decode(byte[] array) {
         try {
             chipher = Cipher.getInstance("AES");
             chipher.init(Cipher.DECRYPT_MODE, key);
@@ -26,7 +32,7 @@ public class Decoder {
             System.out.println("Error in Cipher initialization: " + e.getMessage());
         }
 
-        Package pg = new Package();
+        packet.Package pg = new Package();
         ByteBuffer bb = ByteBuffer.wrap(array);
         byte bMagic = bb.get();
         if (bMagic != 0x13) throw new IllegalArgumentException("Magic byte is not 0x13");

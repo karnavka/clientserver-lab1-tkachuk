@@ -60,12 +60,12 @@ public class Processor implements Runnable {
                 Product lock = group.get(productName);
                 synchronized (lock) {
                     lock.setPrice(price);
-                    answer.setMessage("OK");
+                    answer.setMessage("set price: " + price + " for product: " + productName);
                 }
                 return;
             }
         }
-        answer.setMessage("Product not found");
+        answer.setMessage("product: " + productName + " not found");
     }
 
     private void addProductsToGroup(Message msg, Message answer) {
@@ -77,26 +77,25 @@ public class Processor implements Runnable {
         if (DataBase.groups.containsKey(groupName)) {
             ConcurrentHashMap<String, Product> group = DataBase.groups.get(groupName);
             if (group.containsKey(productName)) {
-                answer.setMessage("Product already exists");
+                answer.setMessage("product: " + productName + " already exists");
             } else {
                 group.put(productName, new Product(productName));
-                answer.setMessage("OK");
+                answer.setMessage("put product: " + productName + " to group: " + groupName);
             }
         } else {
-            answer.setMessage("Group not found");
+            answer.setMessage("group: " + groupName + " not found");
         }
 
     }
 
     private void addGroup(Message msg, Message answer) {
         String fullMessage = msg.getMessage();
-        System.out.println(fullMessage);
         String groupName = fullMessage.split(": ")[1];
         if (DataBase.groups.containsKey(groupName)) {
-            answer.setMessage("Group already exists");
+            answer.setMessage("group: " + groupName + " already exists");
         } else {
             DataBase.groups.put(groupName, new ConcurrentHashMap<>());
-            answer.setMessage("OK");
+            answer.setMessage("add group: " + groupName);
         }
     }
 
@@ -110,14 +109,13 @@ public class Processor implements Runnable {
             if (group.containsKey(productName)) {
                 Product lock = group.get(productName);
                 synchronized (lock) {
-                    int currentQuantity = lock.getQuantity();
                     lock.setQuantity(lock.getQuantity() + amountToAdd);
-                    answer.setMessage("OK");
+                    answer.setMessage("add: " +amountToAdd+" "+productName + "'s new quantity: " + lock.getQuantity());
                 }
                 return;
             }
         }
-        answer.setMessage("Product not found");
+        answer.setMessage("product: " + productName + " not found");
     }
 
     private void deleteProduct(Message msg, Message answer) {
@@ -132,17 +130,17 @@ public class Processor implements Runnable {
                 synchronized (lock) {
                     int newQuantity = lock.getQuantity() - amountToDelete;
                     if (newQuantity < 0) {
-                        answer.setMessage("Not enough product");
+                        answer.setMessage("not enough product to write off: " + productName);
                     }
                     if (newQuantity > 0) {
                         lock.setQuantity(newQuantity);
-                        answer.setMessage("OK");
+                        answer.setMessage("write off: " +amountToDelete+" "+ productName + "'s new quantity: " + lock.getQuantity());
                     }
                 }
                 return;
             }
         }
-        answer.setMessage("Product not found");
+        answer.setMessage("product: " + productName + " not found");
     }
 
     private void getProductQuantity(Message msg, Message answer) {
@@ -152,12 +150,12 @@ public class Processor implements Runnable {
             if (group.containsKey(productName)) {
                 Product lock = group.get(productName);
                 synchronized (lock) {
-                    answer.setMessage("quantity: " + lock.getQuantity());
+                    answer.setMessage(productName + "'s quantity: " + lock.getQuantity());
                 }
                 return;
             }
         }
-        answer.setMessage("Product not found");
+        answer.setMessage("product: " + productName + " not found");
     }
 
 }

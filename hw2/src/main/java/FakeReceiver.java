@@ -16,7 +16,7 @@ public class FakeReceiver implements Receiver, Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 receive();
-                Thread.sleep(50);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 System.out.println(e.getMessage());
                 Thread.currentThread().interrupt();

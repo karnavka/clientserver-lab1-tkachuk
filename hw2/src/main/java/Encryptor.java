@@ -18,7 +18,6 @@ public class Encryptor implements Runnable {
     private void encrypt() throws InterruptedException {
         Package pg = Queues.queueOfAnswers.take();
         byte[] crypt = Encoder.encode(pg);
-        System.out.println(125);
         Queues.queueOfEncryptedAnswers.put(crypt);
     }
 }

@@ -3,7 +3,7 @@ import enums.Products;
 import enums.Commands;
 import packet.Message;
 import packet.Package;
-import tools.Encoder;
+import utils.Encoder;
 
 import java.util.Random;
 
@@ -16,6 +16,7 @@ public class FakeReceiver implements Receiver {
         //спочатку роблю пакет потім переводжу в масив байтів, а потім знов декриптую в пакет
         //на наступному етапі
         byte[] packet = Encoder.encode(generateRandomPackage());
+        Queues.queueOfRawInfo.add(packet);
     }
 
     private Package generateRandomPackage() {
@@ -24,9 +25,9 @@ public class FakeReceiver implements Receiver {
 
     private Message generateRandomMessage() {
         StringBuilder bld = new StringBuilder();
-        int randomCommand = random.nextInt(7) - 1;
-        int randomProduct = random.nextInt(9) - 1;
+        int randomCommand = random.nextInt(6);
         Commands command = Commands.values()[randomCommand];
+        int randomProduct = random.nextInt(8);
         Products product = Products.values()[randomProduct];
         Groups group;
         switch (command) {
@@ -49,7 +50,7 @@ public class FakeReceiver implements Receiver {
                 break;
             case SET_PRICE:
                 bld.append("product: ").append(product.name).append("\n");
-                bld.append("price").append(random.nextDouble(100));
+                bld.append("price: ").append(random.nextDouble());
                 break;
         }
         return new Message(command.cType, random.nextInt(), bld.toString());

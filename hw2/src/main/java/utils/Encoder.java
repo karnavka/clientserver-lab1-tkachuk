@@ -23,6 +23,7 @@ public class Encoder {
     static Cipher chipher;
 
     public static byte[] encode(Package pg) {
+        Cipher cipher = null;
         try {
             chipher = Cipher.getInstance("AES");
             chipher.init(Cipher.ENCRYPT_MODE, key);

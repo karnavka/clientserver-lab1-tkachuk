@@ -16,26 +16,26 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public class Decoder {
-
-    static Cipher chipher;
+    //  private static Cipher cipher;
     private static final Key key =
             new SecretKeySpec(
                     "kittykittyxxxxxx".getBytes(StandardCharsets.UTF_8),
                     "AES"
             );
 
-    public static packet.Package decode(byte[] array) {
+    public static Package decode(byte[] array) {
+        Cipher cipher = null;
         try {
-            chipher = Cipher.getInstance("AES");
-            chipher.init(Cipher.DECRYPT_MODE, key);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException| InvalidKeyException e) {
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
             System.out.println("Error in Cipher initialization: " + e.getMessage());
         }
 
-        packet.Package pg = new Package();
         ByteBuffer bb = ByteBuffer.wrap(array);
         byte bMagic = bb.get();
         if (bMagic != 0x13) throw new IllegalArgumentException("Magic byte is not 0x13");
+
         byte bSrc = bb.get();
         long bPktId = bb.getLong();
         int wLen = bb.getInt();
@@ -45,25 +45,26 @@ public class Decoder {
         if (wCrc16ForChecking != wCrc16) throw new IllegalArgumentException("Crc header checking failed");
 
         int cType = bb.getInt();
-        int bUseriID = bb.getInt();
+        int bUserID = bb.getInt();
         byte[] messageBytes = new byte[wLen - 8];
         bb.get(messageBytes);
-      //  bb.position(24 + wLen - 8);
+        //  bb.position(24 + wLen - 8);
 
         short wCrc16M = bb.getShort();
         short wCrc16MForChecking = Crc16.calculateCrc(bb.array(), 16, wLen);
         if (wCrc16MForChecking != wCrc16M) throw new IllegalArgumentException("Crc checking failed");
 
         try {
-            messageBytes = chipher.doFinal(messageBytes);
+            messageBytes = cipher.doFinal(messageBytes);
         } catch (IllegalBlockSizeException | BadPaddingException e) {
             System.out.println("Error in Cipher " + e.getMessage());
         }
-        String message = new String(messageBytes);
 
+        String message = new String(messageBytes);
+        Package pg = new Package();
         pg.setbSrc(bSrc);
         pg.setbPktId(bPktId);
-        pg.setbMsg(new Message(cType, bUseriID, message));
+        pg.setbMsg(new Message(cType, bUserID, message));
 
         return pg;
     }

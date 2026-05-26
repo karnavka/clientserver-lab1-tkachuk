@@ -4,7 +4,6 @@ package packet;
  * Source <a href="https://introcs.cs.princeton.edu/java/61data/CRC16.java">CRC16</a>
  */
 public class Crc16 {
-
     private static final int[] TABLE = {
             0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
             0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
@@ -46,9 +45,8 @@ public class Crc16 {
 
     public static short calculateCrc(byte[] bytes) {
         int crc = 0x0000;
-        for (byte b : bytes) {
+        for (byte b : bytes)
             crc = (crc >>> 8) ^ TABLE[(crc ^ b) & 0xff];
-        }
 
         return (short) crc;
     }
@@ -67,5 +65,4 @@ public class Crc16 {
     public static void printCrc(String arg) {
         System.out.println(Integer.toHexString(calculateCrc(arg)));
     }
-
 }

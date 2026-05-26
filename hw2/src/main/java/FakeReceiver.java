@@ -18,6 +18,7 @@ public class FakeReceiver implements Receiver, Runnable {
                 receive();
                 Thread.sleep(50);
             } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
                 Thread.currentThread().interrupt();
             }
         }
@@ -29,7 +30,7 @@ public class FakeReceiver implements Receiver, Runnable {
         //спочатку роблю пакет потім переводжу в масив байтів, а потім знов декриптую в пакет
         //на наступному етапі
         byte[] packet = Encoder.encode(generateRandomPackage());
-        Queues.queueOfRawInfo.add(packet);
+        Queues.queueOfRawInfo.put(packet);
     }
 
     private Package generateRandomPackage() {
@@ -42,13 +43,14 @@ public class FakeReceiver implements Receiver, Runnable {
         Commands command = Commands.values()[randomCommand];
         int randomProduct = random.nextInt(8);
         Products product = Products.values()[randomProduct];
+
         Groups group;
         switch (command) {
             case GET_PRODUCT_QUANTITY:
-
-            case DEL_PRODUCT:
-
-            case ADD_PRODUCT:
+                bld.append("product: ").append(product.name);
+                break;
+            case DEL_PRODUCT_AMOUNT:
+            case ADD_PRODUCT_AMOUNT:
                 bld.append("product: ").append(product.name);
                 bld.append("\n");
                 bld.append("amount: ").append(random.nextInt(100));
@@ -68,6 +70,7 @@ public class FakeReceiver implements Receiver, Runnable {
                 bld.append("price: ").append(random.nextDouble());
                 break;
         }
+
         return new Message(command.cType, random.nextInt(), bld.toString());
     }
 

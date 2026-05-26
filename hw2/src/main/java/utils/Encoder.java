@@ -20,24 +20,25 @@ public class Encoder {
                     "kittykittyxxxxxx".getBytes(StandardCharsets.UTF_8),
                     "AES"
             );
-    static Cipher chipher;
+    //  private static Cipher cipher;
 
     public static byte[] encode(Package pg) {
         Cipher cipher = null;
         try {
-            chipher = Cipher.getInstance("AES");
-            chipher.init(Cipher.ENCRYPT_MODE, key);
+            cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
             System.out.println("Error in Cipher init " + e.getMessage());
         }
 
         byte[] encryptMessage = null;
         try {
-            encryptMessage = chipher.doFinal(pg.getbMsg().getMessage().getBytes());
+            encryptMessage = cipher.doFinal(pg.getbMsg().getMessage().getBytes());
         } catch (BadPaddingException | IllegalBlockSizeException e) {
-            System.out.println("Error in Cipher encription: " + e.getMessage());
+            System.out.println("Error in Cipher encryption: " + e.getMessage());
         }
 
+        //      if (encryptMessage == null) throw new RuntimeException("Error in Cipher encryption");
         int wLen = encryptMessage.length + 8;
         ByteBuffer bb = ByteBuffer.allocate(16 + wLen + 2);
 
@@ -52,6 +53,7 @@ public class Encoder {
         bb.put(encryptMessage);
         short wCrc162 = Crc16.calculateCrc(bb.array(), 16, wLen);
         bb.putShort(wCrc162);
+
         return bb.array();
     }
 }

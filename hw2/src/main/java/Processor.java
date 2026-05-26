@@ -1,4 +1,3 @@
-import enteties.Group;
 import enteties.Product;
 import enums.Commands;
 import packet.Message;
@@ -6,17 +5,16 @@ import packet.Package;
 import utils.DataBase;
 import utils.Queues;
 
-import java.text.CompactNumberFormat;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Processor implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-
             try {
                 process();
             } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
                 Thread.currentThread().interrupt();
             }
         }

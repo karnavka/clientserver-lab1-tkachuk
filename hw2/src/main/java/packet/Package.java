@@ -3,9 +3,9 @@ package packet;
 import enums.Commands;
 
 public class Package {
-    byte bSrc;
-    static long bPktId = 0;
-    Message bMsg;
+    private static long bPktId = 0;
+    private byte bSrc;
+    private Message bMsg;
 
     public Package() {
 
@@ -13,8 +13,9 @@ public class Package {
 
     public Package(byte bSrc, Message bMsg) {
         this.bSrc = bSrc;
-        this.bPktId++;
         this.bMsg = bMsg;
+
+        bPktId++;
     }
 
     public Package(Message bMsg) {
@@ -48,6 +49,6 @@ public class Package {
     @Override
     public String toString() {
         Commands commands = Commands.values()[bMsg.getcType()];
-     return "Package " + bPktId + "\n" + commands.name() + "\n" + bMsg.message;
+        return "Package " + bPktId + "\n" + commands.name() + "\n" + bMsg.getMessage();
     }
 }

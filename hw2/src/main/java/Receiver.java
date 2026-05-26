@@ -1,3 +1,3 @@
-public interface Receiver extends Runnable{
-    void receive()  throws InterruptedException;
+public interface Receiver extends Runnable {
+    void receive() throws InterruptedException;
 }

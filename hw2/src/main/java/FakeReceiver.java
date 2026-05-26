@@ -4,14 +4,26 @@ import enums.Commands;
 import packet.Message;
 import packet.Package;
 import utils.Encoder;
+import utils.Queues;
 
 import java.util.Random;
 
-public class FakeReceiver implements Receiver {
+public class FakeReceiver implements Receiver, Runnable {
     private final Random random = new Random();
 
     @Override
-    public void receive() {
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                receive();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    @Override
+    public void receive() throws InterruptedException {
         //в реальності мав прийматися масив байтів, але щоб згенерувати реальне повідомлення я
         //спочатку роблю пакет потім переводжу в масив байтів, а потім знов декриптую в пакет
         //на наступному етапі
@@ -37,6 +49,8 @@ public class FakeReceiver implements Receiver {
 
             case ADD_PRODUCT:
                 bld.append("product: ").append(product.name);
+                bld.append("\n");
+                bld.append("amount: ").append(random.nextInt(100));
                 break;
             case ADD_GROUP:
                 int randomGroup = random.nextInt(4);
@@ -55,4 +69,5 @@ public class FakeReceiver implements Receiver {
         }
         return new Message(command.cType, random.nextInt(), bld.toString());
     }
+
 }

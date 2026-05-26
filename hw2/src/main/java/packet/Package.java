@@ -1,8 +1,10 @@
 package packet;
 
+import enums.Commands;
+
 public class Package {
     byte bSrc;
-    long bPktId = 0;
+    static long bPktId = 0;
     Message bMsg;
 
     public Package() {
@@ -41,5 +43,11 @@ public class Package {
 
     public void setbMsg(Message bMsg) {
         this.bMsg = bMsg;
+    }
+
+    @Override
+    public String toString() {
+        Commands commands = Commands.values()[bMsg.getcType()];
+     return "Package " + bPktId + "\n" + commands.name() + "\n" + bMsg.message;
     }
 }

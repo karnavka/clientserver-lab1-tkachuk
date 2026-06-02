@@ -1,5 +1,4 @@
 package tcp;
-
 import enums.Commands;
 import enums.Groups;
 import enums.Products;
@@ -7,7 +6,6 @@ import packet.Message;
 import packet.Package;
 import utils.Decoder;
 import utils.Encoder;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,7 +41,7 @@ public class StoreClientTCPThread extends Thread {
     public void run() {
 
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 13; i++) {
                 Package request = generateRandomPackage();
                 byte[] encoded = Encoder.encode(request);
                 send(encoded);
@@ -82,7 +80,7 @@ public class StoreClientTCPThread extends Thread {
 
     private Package generateRandomPackage() {
         Commands command =
-                Commands.values()[random.nextInt(Commands.values().length)];
+                Commands.values()[random.nextInt(Commands.values().length-1)];
         StringBuilder bld = new StringBuilder();
         switch (command) {
             case GET_PRODUCT_QUANTITY -> {

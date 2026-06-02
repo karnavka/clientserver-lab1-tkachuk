@@ -1,12 +1,10 @@
 package packet_processing;
-
 import enteties.Product;
 import enums.Commands;
 import packet.Message;
 import packet.Package;
 import utils.DataBase;
 import utils.Queues;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Processor implements Runnable {
@@ -48,6 +46,10 @@ public class Processor implements Runnable {
             case SET_PRICE:
                 setPrice(msg, answer);
                 break;
+            case CALLBACK:
+                answer.setMessage("Invalid command");
+                break;
+
         }
         Queues.queueOfAnswers.put(
                 new Queues.packetSocket(
@@ -118,7 +120,7 @@ public class Processor implements Runnable {
                 Product lock = group.get(productName);
                 synchronized (lock) {
                     lock.setQuantity(lock.getQuantity() + amountToAdd);
-                    answer.setMessage("add: " +amountToAdd+" "+productName + "'s new quantity: " + lock.getQuantity());
+                    answer.setMessage("add: " + amountToAdd + " " + productName + "'s new quantity: " + lock.getQuantity());
                 }
                 return;
             }
@@ -139,10 +141,9 @@ public class Processor implements Runnable {
                     int newQuantity = lock.getQuantity() - amountToDelete;
                     if (newQuantity < 0) {
                         answer.setMessage("not enough product to write off: " + productName);
-                    }
-                    else {
+                    } else {
                         lock.setQuantity(newQuantity);
-                        answer.setMessage("write off: " +amountToDelete+" "+ productName + "'s new quantity: " + lock.getQuantity());
+                        answer.setMessage("write off: " + amountToDelete + " " + productName + "'s new quantity: " + lock.getQuantity());
                     }
                 }
                 return;

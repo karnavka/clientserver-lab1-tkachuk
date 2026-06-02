@@ -1,7 +1,5 @@
 package tcp;
-
 import java.net.InetAddress;
-
 
 public class StoreClientTCP {
 
@@ -17,7 +15,7 @@ public class StoreClientTCP {
                 new StoreClientTCPThread(addr);
             }
 
-            Thread.sleep(100);
+            Thread.sleep(500);
         }
     }
 }

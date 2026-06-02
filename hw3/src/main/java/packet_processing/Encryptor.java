@@ -1,3 +1,5 @@
+package packet_processing;
+
 import packet.Package;
 import utils.Encoder;
 import utils.Queues;
@@ -16,8 +18,9 @@ public class Encryptor implements Runnable {
     }
 
     private void encrypt() throws InterruptedException {
-        Package pg = Queues.queueOfAnswers.take();
+        Queues.packetSocket ps = Queues.queueOfAnswers.take();
+        Package pg = ps.getPackage();
         byte[] crypt = Encoder.encode(pg);
-        Queues.queueOfEncryptedAnswers.put(crypt);
+        Queues.queueOfEncryptedAnswers.put(new  Queues.byteSocket(crypt,ps.getSocket()));
     }
 }

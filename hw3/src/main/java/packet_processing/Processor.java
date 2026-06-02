@@ -1,3 +1,5 @@
+package packet_processing;
+
 import enteties.Product;
 import enums.Commands;
 import packet.Message;
@@ -21,7 +23,8 @@ public class Processor implements Runnable {
     }
 
     public void process() throws InterruptedException {
-        Package pg = Queues.queueOfPackages.take();
+        Queues.packetSocket ps = Queues.queueOfPackages.take();
+        Package pg = ps.getPackage();
         Message msg = pg.getbMsg();
         int cType = msg.getcType();
         Message answer = new Message(Commands.CALLBACK.cType, msg.getbUserId(), "");
@@ -46,7 +49,12 @@ public class Processor implements Runnable {
                 setPrice(msg, answer);
                 break;
         }
-        Queues.queueOfAnswers.put(new Package(answer));
+        Queues.queueOfAnswers.put(
+                new Queues.packetSocket(
+                        new Package(answer),
+                        ps.getSocket()
+                )
+        );
     }
 
     private void setPrice(Message msg, Message answer) {

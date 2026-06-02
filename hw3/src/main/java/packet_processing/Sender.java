@@ -1,3 +1,5 @@
+package packet_processing;
+
 import packet.Message;
 import packet.Package;
 import utils.Decoder;
@@ -18,9 +20,7 @@ public class Sender implements Runnable {
     }
 
     private void send() throws InterruptedException {
-        byte[] crypt = Queues.queueOfEncryptedAnswers.take();
-        Package pg = Decoder.decode(crypt);
-        Message msg = pg.getbMsg();
-        System.out.println(msg.getMessage());
+        Queues.byteSocket bs =  Queues.queueOfEncryptedAnswers.take();
+        bs.getSocket().send(bs.getRawData());
     }
 }

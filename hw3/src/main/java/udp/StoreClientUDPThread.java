@@ -49,16 +49,14 @@ public class StoreClientUDPThread extends Thread {
         try {
 
             for (int i = 0; i < 3; i++) {
-
+                Thread.sleep(1000);
                 Package pg = generateRandomPackage();
                 System.out.println(
-                        "\nClient " + id + " sent:"
+                        "\nClient " + id + " sent:" + "\n" + pg
                 );
-                if(pg.getbMsg().getMessage().trim().isEmpty()){   System.out.println(
-                        "null"
-                );
-                }
-                System.out.println(pg);
+                // System.out.println(pg.getbMsg().getcType());
+
+                //    System.out.println(pg);
 
                 byte[] data = Encoder.encode(pg);
 
@@ -97,11 +95,11 @@ public class StoreClientUDPThread extends Thread {
                         Decoder.decode(answer);
 
                 System.out.println(
-                        "\nClient " + id + " received:"
+                        "\nClient " + id + " received:" + "\n" + resp
                 );
-                System.out.println(resp);
+                //       System.out.println(resp);
 
-      //          Thread.sleep(1000);
+                //    Thread.sleep(1000);
             }
 
         } catch (Exception e) {
@@ -125,7 +123,7 @@ public class StoreClientUDPThread extends Thread {
 
     private Package generateRandomPackage() {
         Commands command =
-                Commands.values()[random.nextInt(Commands.values().length-1)];
+                Commands.values()[random.nextInt(Commands.values().length - 1)];
         StringBuilder bld = new StringBuilder();
         switch (command) {
             case GET_PRODUCT_QUANTITY -> {

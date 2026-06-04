@@ -15,8 +15,8 @@ public class SocketWrapper {
     private final DatagramSocket socketUDP;
     public final BlockingQueue<byte[]> queueOfRawPackages;
     public final String indicator;
-    private InetAddress lastAddress;
-    private int lastPort;
+    private InetAddress addressOfReceiver;
+    private int portOfReceiver;
 
     public SocketWrapper(
             Socket socket,
@@ -72,14 +72,18 @@ public class SocketWrapper {
         }
     }
 
-    public void sendUDP(byte[] data) {
+    public void sendUDP(
+            byte[] data,
+            InetAddress address,
+            int port
+    ) {
         try {
             DatagramPacket packet =
                     new DatagramPacket(
                             data,
                             data.length,
-                            lastAddress,
-                            lastPort
+                            address,
+                            port
                     );
 
             socketUDP.send(packet);
@@ -91,7 +95,6 @@ public class SocketWrapper {
 
     public byte[] readUDP() {
         try {
-
             byte[] buffer = new byte[65535];
 
             DatagramPacket packet =
@@ -102,8 +105,8 @@ public class SocketWrapper {
 
             socketUDP.receive(packet);
 
-            lastAddress = packet.getAddress();
-            lastPort = packet.getPort();
+            addressOfReceiver = packet.getAddress();
+            portOfReceiver = packet.getPort();
 
             byte[] data = new byte[packet.getLength()];
 
@@ -120,5 +123,11 @@ public class SocketWrapper {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public InetAddress getAddressOfReceiver() {
+        return addressOfReceiver;
+    }
+    public int getPortOfReceiver() {
+        return portOfReceiver;
     }
 }

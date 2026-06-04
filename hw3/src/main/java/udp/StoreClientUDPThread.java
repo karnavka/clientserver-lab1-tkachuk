@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 public class StoreClientUDPThread extends Thread {
 
     private static final AtomicInteger THREAD_COUNT =
@@ -47,13 +48,16 @@ public class StoreClientUDPThread extends Thread {
 
         try {
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 3; i++) {
 
                 Package pg = generateRandomPackage();
-
                 System.out.println(
                         "\nClient " + id + " sent:"
                 );
+                if(pg.getbMsg().getMessage().trim().isEmpty()){   System.out.println(
+                        "null"
+                );
+                }
                 System.out.println(pg);
 
                 byte[] data = Encoder.encode(pg);
@@ -97,7 +101,7 @@ public class StoreClientUDPThread extends Thread {
                 );
                 System.out.println(resp);
 
-                Thread.sleep(1000);
+      //          Thread.sleep(1000);
             }
 
         } catch (Exception e) {

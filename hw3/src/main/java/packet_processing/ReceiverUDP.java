@@ -3,6 +3,7 @@ package packet_processing;
 import utils.Queues;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ReceiverUDP implements Runnable {
@@ -22,12 +23,20 @@ public class ReceiverUDP implements Runnable {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] packet = socketWrapper.readUDP();
-                Queues.queueOfRawInfo.put(
+
+                Queues.byteSocket bs =
                         new Queues.byteSocket(
                                 packet,
                                 socketWrapper
-                        )
+                        );
+                // System.out.println("address in receiver"+socketWrapper.getAddressOfReceiver());
+                //System.out.println("port in receiver"+socketWrapper.getPortOfReceiver());
+                bs.setAddressAndPort(
+                        socketWrapper.getAddressOfReceiver(),
+                        socketWrapper.getPortOfReceiver()
                 );
+
+                Queues.queueOfRawInfo.put(bs);
             }
 
         } catch (Exception e) {

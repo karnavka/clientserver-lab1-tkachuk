@@ -20,8 +20,12 @@ public class Decryptor implements Runnable {
     private void decrypt() throws InterruptedException {
         Queues.byteSocket bs = Queues.queueOfRawInfo.take();
         byte[] rawData = bs.getRawData();
+        String indicator = bs.getSocket().indicator;
         Package pg = Decoder.decode(rawData);
         Queues.packetSocket ps= new Queues.packetSocket(pg, bs.getSocket());
+        if(indicator.equals("UDP")){
+            ps.setAddressAndPort(bs.getAddress(),  bs.getPort());
+        }
         Queues.queueOfPackages.put(ps);
     }
 }

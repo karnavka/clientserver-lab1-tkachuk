@@ -1,10 +1,12 @@
 package packet_processing;
+
 import enteties.Product;
 import enums.Commands;
 import packet.Message;
 import packet.Package;
 import utils.DataBase;
 import utils.Queues;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Processor implements Runnable {
@@ -51,12 +53,12 @@ public class Processor implements Runnable {
                 break;
 
         }
-        Queues.queueOfAnswers.put(
-                new Queues.packetSocket(
-                        new Package(answer),
-                        ps.getSocket()
-                )
-        );
+        Queues.packetSocket psres = new Queues.packetSocket(new Package(answer),
+                ps.getSocket());
+        if (ps.getSocket().indicator.equals("UDP")) {
+            psres.setAddressAndPort(ps.getAddress(), ps.getPort());
+        }
+        Queues.queueOfAnswers.put(ps);
     }
 
     private void setPrice(Message msg, Message answer) {

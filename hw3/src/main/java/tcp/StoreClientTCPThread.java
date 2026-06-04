@@ -41,7 +41,7 @@ public class StoreClientTCPThread extends Thread {
     public void run() {
 
         try {
-            for (int i = 0; i < 13; i++) {
+            for (int i = 0; i < 2; i++) {
                 Package request = generateRandomPackage();
                 byte[] encoded = Encoder.encode(request);
                 send(encoded);
@@ -53,7 +53,7 @@ public class StoreClientTCPThread extends Thread {
                                 responsePackage.getbMsg().getMessage()
                 );
 
-                Thread.sleep(200);
+                Thread.sleep(1000);
             }
 
             socket.close();

@@ -10,7 +10,6 @@ public class StoreClientUDP {
                 InetAddress.getByName("localhost");
 
         for (int i = 0; i < 5; i++) {
-
             new StoreClientUDPThread(address);
         }
     }

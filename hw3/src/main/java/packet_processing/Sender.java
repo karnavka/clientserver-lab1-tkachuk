@@ -21,6 +21,10 @@ public class Sender implements Runnable {
 
     private void send() throws InterruptedException {
         Queues.byteSocket bs =  Queues.queueOfEncryptedAnswers.take();
-        bs.getSocket().send(bs.getRawData());
+        if(bs.getSocket().indicator.equals("TCP")) {
+            bs.getSocket().sendTCP(bs.getRawData());
+        }else if(bs.getSocket().indicator.equals("UDP")) {
+            bs.getSocket().sendUDP(bs.getRawData());
+        }
     }
 }

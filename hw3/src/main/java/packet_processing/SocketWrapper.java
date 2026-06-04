@@ -3,27 +3,43 @@ package packet_processing;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
 public class SocketWrapper {
 
-    private final Socket socket;
+    private final Socket socketTCP;
+    private final DatagramSocket socketUDP;
     public final BlockingQueue<byte[]> queueOfRawPackages;
+    public final String indicator;
+    private InetAddress lastAddress;
+    private int lastPort;
 
     public SocketWrapper(
             Socket socket,
             BlockingQueue<byte[]> queueOfRawPackages
     ) {
-        this.socket = socket;
+        this.socketTCP = socket;
+        this.socketUDP = null;
         this.queueOfRawPackages = queueOfRawPackages;
+        this.indicator = "TCP";
     }
 
-    public void send(byte[] data) {
+    public SocketWrapper(DatagramSocket socket, BlockingQueue<byte[]> queueOfRawPackages){
+        this.socketUDP = socket;
+        this.socketTCP = null;
+        this.queueOfRawPackages = queueOfRawPackages;
+        this.indicator = "UDP";
+    }
+
+    public void sendTCP(byte[] data) {
         try {
             DataOutputStream out =
                     new DataOutputStream(
-                            socket.getOutputStream()
+                            socketTCP.getOutputStream()
                     );
 
             out.writeInt(data.length);
@@ -35,12 +51,12 @@ public class SocketWrapper {
         }
     }
 
-    public byte[] read() {
+    public byte[] readTCP() {
 
         try {
             DataInputStream in =
                     new DataInputStream(
-                            socket.getInputStream()
+                            socketTCP.getInputStream()
                     );
 
             int length = in.readInt();
@@ -48,6 +64,56 @@ public class SocketWrapper {
             byte[] data = new byte[length];
 
             in.readFully(data);
+
+            return data;
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendUDP(byte[] data) {
+        try {
+            DatagramPacket packet =
+                    new DatagramPacket(
+                            data,
+                            data.length,
+                            lastAddress,
+                            lastPort
+                    );
+
+            socketUDP.send(packet);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public byte[] readUDP() {
+        try {
+
+            byte[] buffer = new byte[65535];
+
+            DatagramPacket packet =
+                    new DatagramPacket(
+                            buffer,
+                            buffer.length
+                    );
+
+            socketUDP.receive(packet);
+
+            lastAddress = packet.getAddress();
+            lastPort = packet.getPort();
+
+            byte[] data = new byte[packet.getLength()];
+
+            System.arraycopy(
+                    packet.getData(),
+                    0,
+                    data,
+                    0,
+                    packet.getLength()
+            );
 
             return data;
         }

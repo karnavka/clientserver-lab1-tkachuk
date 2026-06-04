@@ -18,7 +18,7 @@ public class StoreServerTCP {
             while (true) {
                 Socket socket = server.accept();
                 try {
-                    new Thread(new RealReceiver(socket)).start();
+                    new Thread(new ReceiverTCP(socket)).start();
                 } catch (IOException e) {
                     socket.close();
                 }

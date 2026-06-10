@@ -1,4 +1,5 @@
 package tcp;
+
 import enums.Commands;
 import enums.Groups;
 import enums.Products;
@@ -6,6 +7,7 @@ import packet.Message;
 import packet.Package;
 import utils.Decoder;
 import utils.Encoder;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +17,15 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreClientTCPThread extends Thread {
+    private static final Commands[] RANDOM_COMMANDS = {
+            Commands.GET_PRODUCT_QUANTITY,
+            Commands.DEL_PRODUCT_AMOUNT,
+            Commands.ADD_PRODUCT_AMOUNT,
+            Commands.ADD_GROUP,
+            Commands.ADD_PRODUCT_TO_GROUP,
+            Commands.SET_PRICE
+    };
+
     private static final AtomicInteger THREAD_COUNT = new AtomicInteger(0);
     private final int id;
     private final Socket socket;
@@ -39,7 +50,6 @@ public class StoreClientTCPThread extends Thread {
 
     @Override
     public void run() {
-
         try {
             for (int i = 0; i < 2; i++) {
                 Package request = generateRandomPackage();
@@ -48,8 +58,7 @@ public class StoreClientTCPThread extends Thread {
                 byte[] response = receive();
                 Package responsePackage = Decoder.decode(response);
                 System.out.println(
-                        "Client " + id +
-                                " got: " +
+                        "Client " + id + " got: " +
                                 responsePackage.getbMsg().getMessage()
                 );
 
@@ -61,7 +70,6 @@ public class StoreClientTCPThread extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -80,7 +88,7 @@ public class StoreClientTCPThread extends Thread {
 
     private Package generateRandomPackage() {
         Commands command =
-                Commands.values()[random.nextInt(Commands.values().length-1)];
+                RANDOM_COMMANDS[random.nextInt(RANDOM_COMMANDS.length)];
         StringBuilder bld = new StringBuilder();
         switch (command) {
             case GET_PRODUCT_QUANTITY -> {
@@ -119,7 +127,7 @@ public class StoreClientTCPThread extends Thread {
         return new Package(msg);
     }
 
-    public static int threadCount(){
+    public static int threadCount() {
         return THREAD_COUNT.get();
     }
 }

@@ -1,10 +1,12 @@
 package tcp;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import packet_processing.*;
-public class StoreServerTCP {
 
+import packet_processing.*;
+
+public class StoreServerTCP {
     static final int PORT = 8081;
 
     public static void main(String[] args) throws IOException {

@@ -21,10 +21,10 @@ public class Encryptor implements Runnable {
         Queues.packetSocket ps = Queues.queueOfAnswers.take();
         Package pg = ps.getPackage();
         byte[] crypt = Encoder.encode(pg);
-      Queues.byteSocket bs = new Queues.byteSocket(crypt, ps.getSocket());
-      if(ps.getSocket().indicator.equals("UDP")){
-          bs.setAddressAndPort(ps.getAddress(), ps.getPort());
-      }
+        Queues.byteSocket bs = new Queues.byteSocket(crypt, ps.getSocket());
+        if (ps.getSocket().indicator.equals("UDP"))
+            bs.setAddressAndPort(ps.getAddress(), ps.getPort());
+
         Queues.queueOfEncryptedAnswers.put(bs);
     }
 }

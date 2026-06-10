@@ -1,6 +1,5 @@
 package enums;
 
-//це чисто для фейкової генерації пакетів
 public enum Products {
     PORK("pork"),
     DOG("dog"),

@@ -20,7 +20,6 @@ public class Encoder {
                     "kittykittyxxxxxx".getBytes(StandardCharsets.UTF_8),
                     "AES"
             );
-    //  private static Cipher cipher;
 
     public static byte[] encode(Package pg) {
         Cipher cipher = null;
@@ -38,7 +37,6 @@ public class Encoder {
             System.out.println("Error in Cipher encryption: " + e.getMessage());
         }
 
-        //      if (encryptMessage == null) throw new RuntimeException("Error in Cipher encryption");
         int wLen = encryptMessage.length + 8;
         ByteBuffer bb = ByteBuffer.allocate(16 + wLen + 2);
 

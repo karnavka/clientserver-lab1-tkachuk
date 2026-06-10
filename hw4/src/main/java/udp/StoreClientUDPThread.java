@@ -14,8 +14,15 @@ import java.net.InetAddress;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 public class StoreClientUDPThread extends Thread {
+    private static final Commands[] RANDOM_COMMANDS = {
+            Commands.GET_PRODUCT_QUANTITY,
+            Commands.DEL_PRODUCT_AMOUNT,
+            Commands.ADD_PRODUCT_AMOUNT,
+            Commands.ADD_GROUP,
+            Commands.ADD_PRODUCT_TO_GROUP,
+            Commands.SET_PRICE
+    };
 
     private static final AtomicInteger THREAD_COUNT =
             new AtomicInteger(0);
@@ -36,27 +43,20 @@ public class StoreClientUDPThread extends Thread {
 
         THREAD_COUNT.incrementAndGet();
 
-        System.out.println(
-                "Started UDP client " + id
-        );
+        System.out.println("Started UDP client " + id);
 
         start();
     }
 
     @Override
     public void run() {
-
         try {
-
-            for (int i = 0; i < 3; i++) {
-                Thread.sleep(1000);
+            for (int i = 0; i < 100; i++) {
+                Thread.sleep(100);
                 Package pg = generateRandomPackage();
                 System.out.println(
                         "\nClient " + id + " sent:" + "\n" + pg
                 );
-                // System.out.println(pg.getbMsg().getcType());
-
-                //    System.out.println(pg);
 
                 byte[] data = Encoder.encode(pg);
 
@@ -69,7 +69,6 @@ public class StoreClientUDPThread extends Thread {
                         );
 
                 socket.send(packet);
-
                 byte[] buffer = new byte[65535];
 
                 DatagramPacket response =
@@ -79,9 +78,7 @@ public class StoreClientUDPThread extends Thread {
                         );
 
                 socket.receive(response);
-
-                byte[] answer =
-                        new byte[response.getLength()];
+                byte[] answer = new byte[response.getLength()];
 
                 System.arraycopy(
                         response.getData(),
@@ -91,30 +88,19 @@ public class StoreClientUDPThread extends Thread {
                         response.getLength()
                 );
 
-                Package resp =
-                        Decoder.decode(answer);
+                Package resp = Decoder.decode(answer);
 
-                System.out.println(
-                        "\nClient " + id + " received:" + "\n" + resp
-                );
-                //       System.out.println(resp);
-
-                //    Thread.sleep(1000);
+                System.out.println("\nClient "
+                        + id + " received:" + "\n" + resp);
             }
 
         } catch (Exception e) {
-
-            System.err.println(
-                    "Client " + id + " error: "
-                            + e.getMessage()
+            System.err.println("Client " + id
+                    + " error: " + e.getMessage()
             );
-
         } finally {
-
             socket.close();
-
             THREAD_COUNT.decrementAndGet();
-
             System.out.println(
                     "Client " + id + " finished"
             );
@@ -123,7 +109,7 @@ public class StoreClientUDPThread extends Thread {
 
     private Package generateRandomPackage() {
         Commands command =
-                Commands.values()[random.nextInt(Commands.values().length - 1)];
+                RANDOM_COMMANDS[random.nextInt(RANDOM_COMMANDS.length)];
         StringBuilder bld = new StringBuilder();
         switch (command) {
             case GET_PRODUCT_QUANTITY -> {

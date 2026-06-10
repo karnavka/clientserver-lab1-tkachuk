@@ -1,8 +1,5 @@
 package packet_processing;
 
-import packet.Message;
-import packet.Package;
-import utils.Decoder;
 import utils.Queues;
 
 public class Sender implements Runnable {
@@ -24,13 +21,10 @@ public class Sender implements Runnable {
                 Queues.queueOfEncryptedAnswers.take();
 
         if (bs.getSocket().indicator.equals("TCP")) {
-
             bs.getSocket().sendTCP(
                     bs.getRawData()
             );
-
         } else if (bs.getSocket().indicator.equals("UDP")) {
-
             bs.getSocket().sendUDP(
                     bs.getRawData(),
                     bs.getAddress(),

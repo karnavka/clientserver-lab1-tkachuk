@@ -16,7 +16,6 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public class Decoder {
-    //  private static Cipher cipher;
     private static final Key key =
             new SecretKeySpec(
                     "kittykittyxxxxxx".getBytes(StandardCharsets.UTF_8),
@@ -48,7 +47,7 @@ public class Decoder {
         int bUserID = bb.getInt();
         byte[] messageBytes = new byte[wLen - 8];
         bb.get(messageBytes);
-        //  bb.position(24 + wLen - 8);
+    //  bb.position(24 + wLen - 8);
 
         short wCrc16M = bb.getShort();
         short wCrc16MForChecking = Crc16.calculateCrc(bb.array(), 16, wLen);

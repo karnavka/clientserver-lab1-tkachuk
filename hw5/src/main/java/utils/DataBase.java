@@ -17,12 +17,6 @@ public class DataBase {
     private static final UserService USER_SERVICE =
             new UserService(DEFAULT_DB_URL);
 
-    static {
-        // seed default users if they don't exist yet
-        USER_SERVICE.createUser("admin", "admin123");
-        USER_SERVICE.createUser("user", "password");
-    }
-
     public static ProductService getProductService() {
         return PRODUCT_SERVICE;
     }

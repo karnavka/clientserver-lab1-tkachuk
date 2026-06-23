@@ -38,6 +38,25 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.36</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -53,6 +72,7 @@
                 <version>3.5.4</version>
                 <configuration>
                     <argLine>--enable-native-access=ALL-UNNAMED</argLine>
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
         </plugins>
